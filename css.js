@@ -1,3 +1,13 @@
+/**
+ * @author LinWei
+ * @copyright 2019
+ * @license MIT license
+ * @description 
+ * This file has `css` interface including methods about 
+ * CSS serialize, 
+ * CSS selector escape (see https://developer.mozilla.org/en-US/docs/Web/API/CSS/escape),  
+ * CSS unit (see https://developer.mozilla.org/en-US/docs/Web/API/CSSUnitValue).
+ */
 (function() {
 		"use strict";
 
@@ -36,6 +46,7 @@
 			return this.value + this.unit;
 		};
 
+		/** The method is about converts css value into another one with specified unit. */
 		CSSDigitalUnit.prototype.to = function(unit) {
 			var key = toCamelCase.hasOwnProperty(this.unit) ? toCamelCase[this.unit] : this.unit;
 			try {
@@ -57,25 +68,40 @@
 			return nativeToArray(set);
 		};
 
+		/** The base implementation of `css.escape`. */
+		/**
+		 * @see https://drafts.csswg.org/cssom/#serialize-an-identifier
+		 * @param  {string} selectorText The CSS selector name to escape.
+		 * @return {string}              The escape CSS selector name.
+		 */
 		var baseEscape = function(selectorText) {
 			var result = '', firstCodePoint = selectorText.codePointAt(0);
 			nativeForEach.call(selectorText, function(char, index) {
 				var code = char.codePointAt(0);
+				// The character is NULL (U+0000), then escape to REPLACEMENT CHARACTER (U+FFFD).
 				if (code === 0x0000) {
 					result += '\uFFFD';
 				} else if (
+					// The character is in the range of U+0001 to U+001F, or is U+007F
+					// https://en.wikipedia.org/wiki/C0_and_C1_control_codes 
 					(code >= 0x0001 && code <= 0x001F || code === 0x007F) || 
+					// If the first character is in the range of [0-9]
 					(index === 0 && code >= 0x0030 && code <= 0x0039) || 
+					// If the second character is in the range of [0-9], and the first character is `-` (U+002D)
 					(index === 1 && firstCodePoint === 0x002D && code >= 0x0030 && code <= 0x0039)
 				) {
+					// https://drafts.csswg.org/cssom/#escape-a-character-as-code-point
 					result += `\\${code.toString(16)} `;
 				} else if (
+					// If the selector name only contain a `-` (U+002D)
 					code === 0x002D && 
 					selectorText.length === 1 && 
 					index === 0
 				) {
 					result += `\\${char}`;
 				} else if (
+					// If the character is greater or equal than U+0080, or is `-` (U+002D), or `_` (U+005F)
+					// or [0-9] (U+0030 to U+0039), or [A-Z] (U+0041 to U+005A), or [a-z] (U+0061 to U+007A)
 					code >= 0x0080 || 
 					code === 0x002D || 
 					code === 0x005F || 
@@ -83,6 +109,7 @@
 					code >= 0x0041 && code <= 0x005A || 
 					code >= 0x0061 && code <= 0x007A
 				) {
+					// No need to escape
 					result += char;
 				} else {
 					result += `\\${char}`;
@@ -91,6 +118,12 @@
 			return result;
 		};
 
+		/** The base implementation of `css.serialize`. */
+		/**
+		 * @param  {CSSStyleSheet} sheet   The StyleSheet.
+		 * @param  {boolean}       format  The flag of format the CSS text.
+		 * @return {Object}                The result of serialize.
+		 */
 		var baseSerialize = function(sheet, format) {
 			var result = nativeCreate(null), index = -1,
 			    cssText, names;
@@ -177,6 +210,8 @@
 		var css = nativeCreate(null);
 		css.escape = escape;
 		css.serialize = serialize;
+
+		// Methods about CSS Unit.
 		cssUnit.forEach(function(key) {
 			css[key] = function(value) {
 				if (value === undefined) {

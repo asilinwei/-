@@ -45,6 +45,8 @@ css.serialize(0)
         padding: '20px', 
         background: 'red', 
         cssText: 'div { margin: 20px, padding: 20px, background: red }' 
-    }
+    },
+    
+    length: 2
 }
 ```

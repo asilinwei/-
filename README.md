@@ -50,3 +50,27 @@ css.serialize(0)
     length: 2
 }
 ```
+   
+```js
+css.escape(selectorText)
+```   
+The polyfill of [CSS.escape](https://drafts.csswg.org/cssom/#the-css.escape%28%29-method).  
+  
+Arguments:  
+```selectorText```(string):  The CSS selector name to escape.  
+  
+Return:  
+(string): The escape CSS selector name.  
+  
+Example:  
+
+```html
+<div id="#()[]{}"></div>
+```        
+```js
+document.querySelector('#' + '#()[]{}')
+// => Error: '##()[]{}' is not a valid selector
+
+document.querySelector('#' + css.escape('#()[]{}'))
+// => <div id="#()[]{}"></div>
+```

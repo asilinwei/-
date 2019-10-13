@@ -36,7 +36,7 @@ css.serialize(0)
         margin: '20px', 
         padding: '20px', 
         cssText: 'body { margin: 20px; padding: 20px; }' 
-	},
+    },
 
     '1': { 
         names: ['margin', 'padding', 'background'], 

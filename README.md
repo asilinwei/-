@@ -8,7 +8,7 @@ css.serialize(index, [format=false])
 Serialize the style sheet by index.  
   
 Arguments:  
-```index```(number): The index of the style sheet in document.
+```index```(number): The index of the style sheet in document.  
 ```[format=false]```(boolean): Whether to format the style sheet.
 Return: 
 (Object): The result of serialize.  
@@ -36,7 +36,7 @@ css.serialize(0)
 		padding: '20px', 
 		cssText: 'body { margin: 20px; padding: 20px; }' 
 	},
-	
+
 	'1': { 
 		names: ['margin', 'padding', 'background'], 
 		selectorText: 'div', 

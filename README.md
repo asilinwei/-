@@ -10,7 +10,7 @@ Serialize the style sheet by index.
 Arguments:  
 ```index```(number): The index of the style sheet in document.  
 ```[format=false]```(boolean): Whether to format the style sheet.  
-Return: 
+Return:   
 (Object): The result of serialize.  
   
 Example:    
